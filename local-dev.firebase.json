@@ -1,0 +1,4 @@
+{
+  "API_SECRET_KEY": "atom-todo-secret-2026",
+  "ALLOWED_ORIGIN": "http://localhost:4200"
+}

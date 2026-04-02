@@ -1,6 +1,6 @@
-# AtomTodoList
+# Atom Todo
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.5
+Frontend Angular de la prueba técnica ATOM (lista de tareas). Generado con [Angular CLI](https://github.com/angular/angular-cli) 21.2.5; el título de la app en el navegador coincide con este nombre (ver `src/index.html`).
 
 ## Development server
 

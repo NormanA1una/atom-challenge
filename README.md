@@ -75,7 +75,7 @@ atom-todo-list/src/app/
 │       └── components/  → TaskFormComponent, TaskItemComponent, TaskEditDialogComponent
 └── shared/
     ├── components/      → ConfirmDialogComponent (reusable MatDialog)
-    └── environments/    → environment.ts (dev), environment.prod.ts (CI-injected)
+    └── environments/    → environment.ts (dev — apiKey from repo-root local-dev.firebase.json), environment.prod.ts (CI-injected)
 ```
 
 ### Request flow
@@ -125,24 +125,26 @@ cd atom-todo-list && npm install
 cd ../atom-todo-list-backend/functions && npm install
 ```
 
-### 2 — Create local secrets file
+### 2 — Local dev config (single source of truth)
 
-Create `atom-todo-list-backend/functions/.env` (git-ignored):
+Local values for the API key and CORS origin live in **`local-dev.firebase.json`** at the monorepo root (committed). Example:
 
-```env
-API_SECRET_KEY=any-local-secret
-ALLOWED_ORIGIN=http://localhost:4200
+```json
+{
+  "API_SECRET_KEY": "atom-todo-secret-2026",
+  "ALLOWED_ORIGIN": "http://localhost:4200"
+}
 ```
 
-Make sure `atom-todo-list/src/app/shared/environments/environment.ts` uses the same key value:
+**Why this file exists**
 
-```typescript
-export const environment = {
-  production: false,
-  apiUrl: 'http://127.0.0.1:5001/atom-todo-normanlunadev/us-central1/app/api',
-  apiKey: 'any-local-secret',  // must match API_SECRET_KEY above
-};
-```
+- The Angular app must send the same `X-API-Key` that Express validates (`API_SECRET_KEY`). Those strings used to be duplicated in `environment.ts` and `functions/.env`, which drifted easily and caused confusing `401` errors.
+- Cloud Functions use `defineSecret()` for production; the emulator still resolves secret parameters and may talk to Secret Manager. Writing **both** `functions/.env` and `functions/.secret.local` from one JSON keeps emulator behavior aligned with what the frontend sends.
+- **`atom-todo-list-backend/scripts/sync-local-dev-env.js`** reads `local-dev.firebase.json` and regenerates those two files before emulators start (`start-emulators.sh` and `npm run serve` in `functions` run it automatically).
+
+The dev Angular `environment.ts` imports that JSON via the TypeScript path alias `@local-dev`, so there is only one place to edit the local key and origin.
+
+> Production is unchanged: `environment.prod.ts` still uses `REPLACE_AT_BUILD_TIME`, and real secrets stay in Firebase Secret Manager + GitHub Actions.
 
 ### 3 — Start emulators + build functions
 
@@ -252,6 +254,12 @@ Signals manage synchronous, derived, local state (the task list, loading flag). 
 ### 7. Monorepo with `firebase.json` at the root
 
 A single `firebase deploy` from the monorepo root orchestrates Angular Hosting, Cloud Functions, and Firestore rules in one operation. GitHub Actions builds both projects and deploys them in a single pipeline — no coordination between separate repos required.
+
+### 8. `local-dev.firebase.json` — one file for local API key + CORS origin
+
+Local development spans two runtimes (Angular on port 4200 and the Functions emulator) that must agree on **`API_SECRET_KEY`** (middleware vs `X-API-Key` header) and on **`ALLOWED_ORIGIN`** (browser `Origin` vs CORS). Keeping those values in two separate, hand-edited files caused silent mismatches.
+
+The repo therefore centralizes them in **`local-dev.firebase.json`**. The Angular dev environment imports that JSON so the client always sends the key the server expects. **`atom-todo-list-backend/scripts/sync-local-dev-env.js`** copies the same fields into `functions/.env` and `functions/.secret.local` whenever you start emulators (so `defineSecret`-backed functions and the emulator stay consistent without relying on production Secret Manager for day-to-day work). Production secrets are still not stored in the repo — only this **non-production** placeholder file is committed.
 
 ---
 

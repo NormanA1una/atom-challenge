@@ -1,6 +1,7 @@
 @if (!isExpanded()) {
-  <button mat-flat-button (click)="isExpanded.set(true)" aria-label="Add new task">
-    + Add task
+  <button mat-flat-button type="button" (click)="isExpanded.set(true)" aria-label="Add new task">
+    <mat-icon class="add-task-icon" aria-hidden="true">add_task</mat-icon>
+    <span>Add task</span>
   </button>
 } @else {
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="task-form" aria-label="New task form">

@@ -1,5 +1,5 @@
 <mat-toolbar color="primary" class="toolbar">
-  <span class="toolbar-title">My Tasks</span>
+  <span class="toolbar-title app-brand-heading">Atom Todo List</span>
   <button mat-icon-button (click)="logout()" matTooltip="Sign out" aria-label="Sign out">
     <mat-icon>logout</mat-icon>
   </button>
@@ -13,7 +13,11 @@
       <mat-spinner diameter="48" />
     </div>
   } @else if (tasks().length === 0) {
-    <p class="empty-state" role="status">No tasks yet. Add your first task above.</p>
+    <div class="empty-state" role="status" aria-label="No tasks yet">
+      <mat-icon class="empty-state-icon" aria-hidden="true">task_alt</mat-icon>
+      <p class="empty-state-title app-brand-heading">No tasks yet</p>
+      <p class="empty-state-hint">Add your first task using the form above.</p>
+    </div>
   } @else {
     <div class="task-list" role="list" aria-label="Task list">
       @for (task of tasks(); track task.id) {

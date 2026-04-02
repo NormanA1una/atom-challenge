@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { finalize } from 'rxjs';
 import { Task, UpdateTaskPayload } from '../../core/models/task.model';
 import { TaskService } from '../../core/services/task.service';
@@ -25,6 +26,7 @@ import { TaskItemComponent } from './components/task-item/task-item.component';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
     TaskFormComponent,
     TaskItemComponent,
   ],

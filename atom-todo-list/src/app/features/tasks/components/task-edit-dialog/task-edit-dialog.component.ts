@@ -27,6 +27,7 @@ import { Task, UpdateTaskPayload } from '../../../../core/models/task.model';
     MatButtonModule,
   ],
   templateUrl: './task-edit-dialog.component.html',
+  styleUrl: './task-edit-dialog.component.scss',
 })
 export class TaskEditDialogComponent {
   readonly dialogRef = inject(MatDialogRef<TaskEditDialogComponent>);

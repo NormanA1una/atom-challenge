@@ -1,8 +1,33 @@
 .task-card {
-  transition: opacity 0.2s ease;
+  transition:
+    box-shadow 200ms cubic-bezier(0, 0, 0.2, 1),
+    transform 200ms cubic-bezier(0, 0, 0.2, 1),
+    opacity 0.2s ease;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 70%, transparent);
+
+  &:hover {
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
+    transform: translateY(-1px);
+  }
+
+  &:focus-within {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
 
   &.completed {
-    opacity: 0.6;
+    opacity: 0.72;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .task-card {
+    transition: opacity 0.2s ease;
+  }
+
+  .task-card:hover {
+    transform: none;
   }
 }
 

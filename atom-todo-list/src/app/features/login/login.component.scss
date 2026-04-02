@@ -4,11 +4,24 @@
   justify-content: center;
   min-height: 100vh;
   padding: 1rem;
+  background: radial-gradient(
+      120% 80% at 50% 0%,
+      color-mix(in srgb, var(--mat-sys-primary) 12%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(
+      165deg,
+      var(--mat-sys-surface) 0%,
+      color-mix(in srgb, var(--mat-sys-surface-container-low) 85%, var(--mat-sys-surface)) 100%
+    );
 }
 
 .login-card {
   width: 100%;
   max-width: 400px;
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent),
+    0 8px 24px color-mix(in srgb, var(--mat-sys-on-surface) 14%, transparent);
 
   mat-card-header {
     margin-bottom: 1rem;

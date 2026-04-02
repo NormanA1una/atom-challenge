@@ -18,4 +18,6 @@ if [[ "$(uname -s)" == "Darwin" ]] && [[ -x /usr/libexec/java_home ]]; then
 fi
 # Linux/WSL: export JAVA_HOME to a JDK 21+ install before running this script.
 
+node "${ROOT}/atom-todo-list-backend/scripts/sync-local-dev-env.js"
+
 exec firebase emulators:start --only functions,firestore "$@"
