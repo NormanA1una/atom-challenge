@@ -1,0 +1,30 @@
+<mat-toolbar color="primary" class="toolbar">
+  <span class="toolbar-title">My Tasks</span>
+  <button mat-icon-button (click)="logout()" matTooltip="Sign out" aria-label="Sign out">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<main class="tasks-container">
+  <app-task-form (taskSubmit)="onTaskAdded($event)" />
+
+  @if (isLoading()) {
+    <div class="loading-wrapper" role="status" aria-label="Loading tasks">
+      <mat-spinner diameter="48" />
+    </div>
+  } @else if (tasks().length === 0) {
+    <p class="empty-state" role="status">No tasks yet. Add your first task above.</p>
+  } @else {
+    <div class="task-list" role="list" aria-label="Task list">
+      @for (task of tasks(); track task.id) {
+        <app-task-item
+          [task]="task"
+          (toggleComplete)="onToggleComplete($event)"
+          (editTask)="onEditTask($event)"
+          (deleteTask)="onDeleteTask($event)"
+          role="listitem"
+        />
+      }
+    </div>
+  }
+</main>

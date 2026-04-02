@@ -1,0 +1,57 @@
+name: Build & Deploy to Firebase
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: |
+            atom-todo-list/package-lock.json
+            atom-todo-list-backend/functions/package-lock.json
+
+      # ── Frontend ────────────────────────────────────────────────────
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: atom-todo-list
+
+      - name: Inject API key into production environment
+        # The placeholder REPLACE_AT_BUILD_TIME in environment.prod.ts is
+        # replaced here so the secret never lives in the repository.
+        run: |
+          sed -i "s/REPLACE_AT_BUILD_TIME/${{ secrets.API_SECRET_KEY }}/g" \
+            atom-todo-list/src/app/shared/environments/environment.prod.ts
+
+      - name: Build Angular (production)
+        run: npx ng build --configuration production
+        working-directory: atom-todo-list
+
+      # ── Backend ─────────────────────────────────────────────────────
+
+      - name: Install functions dependencies
+        run: npm ci
+        working-directory: atom-todo-list-backend/functions
+
+      - name: Build Cloud Functions
+        run: npm run build
+        working-directory: atom-todo-list-backend/functions
+
+      # ── Deploy ──────────────────────────────────────────────────────
+
+      - name: Deploy to Firebase (hosting + functions + firestore)
+        run: npx firebase-tools@latest deploy --only hosting,functions,firestore --non-interactive --force
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

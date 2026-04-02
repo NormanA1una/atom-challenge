@@ -1,0 +1,28 @@
+# ── Dependencies ────────────────────────────────────────────────────
+**/node_modules/
+
+# ── Build / compiled output ─────────────────────────────────────────
+atom-todo-list/dist/
+atom-todo-list/.angular/cache/
+atom-todo-list-backend/functions/lib/
+
+# ── Firebase ────────────────────────────────────────────────────────
+**/.firebase/
+*-debug.log
+ui-debug.log
+
+# ── Secrets / local environment ─────────────────────────────────────
+atom-todo-list-backend/functions/.env
+**/*.local
+**/.secret.*
+
+# ── OS ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Cursor workspace internals (not part of the deliverable) ────────
+.cursor/
+CLAUDE.md
+
+# ── Challenge PDF (referenced in docs, not needed in repo) ──────────
+*.pdf

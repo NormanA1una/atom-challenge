@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "atom-todo-list/dist/atom-todo-list/browser",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
+  },
+  "functions": {
+    "source": "atom-todo-list-backend/functions",
+    "codebase": "default",
+    "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+  },
+  "firestore": {
+    "rules": "atom-todo-list-backend/firestore.rules",
+    "indexes": "atom-todo-list-backend/firestore.indexes.json"
+  }
+}
